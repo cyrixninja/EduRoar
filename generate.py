@@ -4,12 +4,8 @@ import google.generativeai as genai
 # Selecting the Gemini model and configuring the API key
 model = genai.GenerativeModel('gemini-pro')
 genai.configure(api_key='your-api-key')
-
-def  generate_content(topic,difficulty,level):
-    # Prompting the model to generate content
-    data = f"""
-     Prompt - Generate 10 multiple choice maths questions on trigonometry and also provide answer.Give Answer in json format                            
-    {
+json_example_data = """
+{
     "questions": [
     {
     "question": "What is the value of sin(30°)?",
@@ -64,7 +60,12 @@ def  generate_content(topic,difficulty,level):
     ],
     "answers": ["0.5", "0.75", "√3", "1", "1", "0", "0", "-1", "0", "0"]
     }
-
+"""
+def  generate_content(topic,difficulty,level):
+    # Prompting the model to generate content
+    data = f"""
+     Prompt - Generate 10 multiple choice maths questions on trigonometry and also provide answer.Give Answer in json format                            
+    {json_example_data}
     Prompt - Generate 10 multiple choice questions on {topic} of {difficulty} of {level} and also provide answer .Give Answer in json format                        
     """
 
