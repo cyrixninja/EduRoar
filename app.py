@@ -1,9 +1,7 @@
 # Importing Libraries
-import google.generativeai as genai
 import flask as Flask
+import generate as gen
 
-# Selecting the Gemini model
-model = genai.GenerativeModel('gemini-pro')
 
 # Creating a Flask app
 app = Flask(__name__)
