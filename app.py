@@ -1,43 +1,48 @@
 # Importing Libraries
-import flask as Flask
+from flask import Flask, render_template, request
 import generate as gen
 import jsonify 
-import requests as request 
-import firebase_admin
-from firebase_admin import credentials, auth
+#import firebase_admin
+#from firebase_admin import credentials, auth
 
 # Initializing the Firebase Admin SDK with the service account credentials
-cred = credentials.Certificate("key.json")
-firebase_admin.initialize_app(cred)
+#cred = credentials.Certificate("key.json")
+#firebase_admin.initialize_app(cred)
 
 
 # Creating a Flask app
 app = Flask(__name__)
 
-# Register route
-@app.route('/register', methods=['POST'])
-def register():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    user = auth.create_user(
-        email=email,
-        email_verified=False,
-        password=password)
-    return jsonify({'uid': user.uid}), 200
+@app.route('/', methods=["GET",'POST'])
+def index():
+    print("Hello")
+    return render_template('index.html', **locals())
 
-# Login route
-@app.route('/login', methods=['POST'])
-def login():
-    email = request.form.get('email')
-    password = request.form.get('password')
-    user = auth.get_user_by_email(email)
-    if user:
-        # Verify the password
-        # If it's valid, create a custom token
-        custom_token = auth.create_custom_token(user.uid)
-        return jsonify({'token': custom_token}), 200
-    else:
-        return jsonify({'message': 'Invalid credentials'}), 401
+@app.route('/learn', methods=["GET",'POST'])
+def learn():
+    print("Hello")
+    return render_template('learn.html', **locals())
+
+@app.route('/register', methods=["GET",'POST'])
+def register():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password']
+        
+        print(name)
+        print(email)
+        print(password)
+    return render_template('register.html', **locals())
+
+@app.route('/signin', methods=["GET",'POST'])
+def signin():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        print(email)
+        print(password)
+    return render_template('signin.html', **locals())
 
 # Defining the route for the home page
 if __name__ == '__main__':
