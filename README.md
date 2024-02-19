@@ -24,6 +24,69 @@ Eduroar aspires to be more than just an educational platform; it is a catalyst f
 ### The Future of Education, Today:
 In the ever-evolving landscape of education, Eduroar stands as a beacon of innovation. The project is a testament to our commitment to shaping the future of learning, making it not only accessible but also tailored to the needs of each individual. Eduroar is not just a tool; it's an inspiration to reimagine education, embrace the power of technology, and empower minds to reach new heights.
 
+## Installation and Setup
 
+**Prerequisites**
+- Python 3.8 or Higher
+- Google Cloud Account 
+- Firebase Account
+
+**Install Required Libraries**
+```
+pip install -r requirements.txt
+```
+
+**API KEYS**
+
+This project is built using Firebase and Google Cloud so please place the required API_Keys in Specified Location wherever specified in the Code.Please Enable the Google Cloud Generative AI API.
+
+![Img2](/screenshots/img1.png)
+
+**Usage**
+
+To run the application, use the following command:
+```
+flask run
+```
+
+
+
+## Project Structure
+
+- [app.py](app.py)
+- [generate.py](generate.py)
+- [README.md](README.md)
+- [requirements.txt](requirements.txt)
+- screenshots/
+- static/
+    - assets/
+        - css/
+            - [animated.css](static/assets/css/animated.css)
+            - [fontawesome.css](static/assets/css/fontawesome.css)
+            - [main.css](static/assets/css/main.css)
+            - [owl.carousel.min.css](static/assets/css/owl.carousel.min.css)
+            - [owl.css](static/assets/css/owl.css)
+            - [style.css](static/assets/css/style.css)
+            - [style2.css](static/assets/css/style2.css)
+        - fonts/
+            - [Flaticon.woff](static/assets/fonts/Flaticon.woff)
+            - [flexslider-icon.eot](static/assets/fonts/flexslider-icon.eot)
+            - [flexslider-icon.ttf](static/assets/fonts/flexslider-icon.ttf)
+            - [flexslider-icon.woff](static/assets/fonts/flexslider-icon.woff)
+            - [fontawesome-webfont.eot](static/assets/fonts/fontawesome-webfont.eot)
+            - [fontawesome-webfont.ttf](static/assets/fonts/fontawesome-webfont.ttf)
+            - [fontawesome-webfont.woff](static/assets/fonts/fontawesome-webfont.woff)
+            - ...
+        - images/
+        - js/
+            - ...
+        - login/
+        - vendor/
+- templates/
+    - [create.html](templates/create.html)
+    - [index.html](templates/index.html)
+    - [learn.html](templates/learn.html)
+    - [register.html](templates/register.html)
+    - [signin.html](templates/signin.html)
 
 
