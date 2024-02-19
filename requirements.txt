@@ -1,5 +1,5 @@
 google-generativeai
 flask
 firebase-admin
-jsonify
+json
 requests

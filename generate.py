@@ -3,7 +3,7 @@ import google.generativeai as genai
 
 # Selecting the Gemini model and configuring the API key
 model = genai.GenerativeModel('gemini-pro')
-genai.configure(api_key='your-api-key')
+genai.configure(api_key='api_key')
 json_example_data = """
 {
     "questions": [
@@ -57,8 +57,7 @@ json_example_data = """
     "options": ["0", "1", "-1", "0.5"],
     "answer": "0"
     }
-    ],
-    "answers": ["0.5", "0.75", "√3", "1", "1", "0", "0", "-1", "0", "0"]
+    ]
     }
 """
 def  generate_content(topic,difficulty,level):

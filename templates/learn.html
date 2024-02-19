@@ -16,6 +16,47 @@
     <link rel="stylesheet" href="{{url_for('static', filename='assets/css/main.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='assets/css/animated.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='assets/css/owl.css')}}">
+    <style>
+.card {
+  width: 100%;
+  height: auto; 
+  margin:  30px; 
+  margin-top: 20px;
+}
+
+
+.card-title, .btn {
+  font-size: 2.5em; 
+  margin-bottom: 1.2em;
+}
+
+
+.form-check {
+  margin-bottom: 1.3em; 
+}
+
+.form-check-input {
+  margin-right: 20px;
+  vertical-align: middle;
+  transform: scale(2.5); 
+}
+
+.form-check-label {
+  vertical-align: middle;
+  font-size: 2em; 
+  margin-bottom: 1em;
+  margin-top: -0.3em; 
+}
+
+.score-text {
+  font-size: 2em; 
+}
+
+.question-card {
+  border-color: rgb(255, 49, 49);
+}
+
+    </style>
   </head>
 <body>
 
@@ -41,7 +82,10 @@
             <ul class="nav">
               <li class="scroll-to-section"><a href="{{url_for('index')}}" class="active">Home</a></li>
               <li class="scroll-to-section"><a href="{{url_for('index')}}">About</a></li>
-              <li class="scroll-to-section"><a href="{{url_for('learn')}}">Continue your Learning</a></li>             
+              <li class="scroll-to-section"><a href="{{url_for('create')}}">Create a Lesson</a></li> 
+              <li class="scroll-to-section"><a href="{{url_for('learn')}}">Learn</a></li>  
+              <li class="scroll-to-section"><a href="{{url_for('logout')}}">Logout</a></li>  
+              <li class="scroll-to-section"><a href="{{url_for('clear')}}">Clear Quizzes</a></li>              
               <li class="scroll-to-section"><div class="border-login-button"><a href="{{url_for('signin')}}">Sign In</a></div></li>
             </ul>        
             <a class='menu-trigger'>
@@ -60,59 +104,98 @@
         <div class="col-lg-4 offset-lg-4  wow fadeInDown" data-wow-duration="1s" data-wow-delay="0.3s">
           <div class="section-heading">
             <h6>Learn</h6>
-            <h4>Continue <em>Learning</em></h4>
+            <h4>Learn <em> Here</em></h4>
+            <h4>Welcome {{ name }} </h4>
             <div class="line-dec"></div>
           </div>
-        </div>
-        <div class="col-lg-6 wow fadeInUp" data-wow-duration="1s" data-wow-delay="0.3s">
-          <div class="quiz-main">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="post-item">
-                  <div class="thumb">
-                    <a href="#"><img src="{{url_for('static', filename='assets/images/quiz2.jpg')}}" alt=""></a>
-                  </div>
-                  <div class="right-content">
-                    <span class="category">Level</span>
-                    <a href="#" ><h4>Title</h4></a>
-                    <p>Lorem ipsum dolor sit amet, cocteturi adipiscing eliterski.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="post-item">
-                  <div class="thumb">
-                    <a href="#"><img src="{{url_for('static', filename='assets/images/quiz2.jpg')}}" alt=""></a>
-                  </div>
-                  <div class="right-content">
-                    <span class="category">Level</span>
-
-                    <a href="#"><h4>Title</h4></a>
-                    <p>Lorem ipsum dolor sit amet, cocteturi adipiscing eliterski.</p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="post-item last-post-item">
-                  <div class="thumb">
-                    <a href="#"><img src="{{url_for('static', filename='assets/images/quiz3.jpg')}}" alt=""></a>
-                  </div>
-                  <div class="right-content">
-                    <span class="category">Level</span>
-
-                    <a href="#"><h4>Title</h4></a>
-                    <p>Lorem ipsum dolor sit amet, cocteturi adipiscing eliterski.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </div>  
       </div>
     </div>
   </div>  
+<div class="d-flex justify-content-center">
+    <div id="quiz-selection">
+      <div class="row">
+        {% if quizzes is not none %}
+      {% for quiz, data in quizzes.items() %}
+      <div class="card question-card text-center rounded border-3 rounded-pill">
+        <div class="card-body">
+          <h5 class="card-title">{{ quiz }}</h5>
+          <button onclick="startQuiz('{{ quiz }}')" class="btn btn-primary">Start Quiz</button>
+        </div>
+      </div>
+      {% endfor %}
+      {% else %}
+  <h2>No quizzes available.Create one to start learn</h2>
+{% endif %}
+    </div>
+    </div>
+  </div>
 
 
+  <div class="col d-flex justify-content-center">
+  <div id="question-display" style="display: none;">
+    <div class="d-flex " style="height: 50vh; width: 70vh;">
+      <div class="card question-card rounded border-3 " id="question-card"></div>
+    </div>
+  </div>
+  
+  <div id="score-display" style="display: none;">
+    <h1>Your Score: <span id="score"></span></h1>
+  </div>
+</div>
+  <script>
+  let quizzes = {{ quizzes|tojson|safe }};
+  let currentQuiz;
+  let currentQuizKey;
+  let currentQuestionIndex = 0;
+  let score = 0;
+  
+  function startQuiz(quiz) {
+    currentQuiz = quiz;
+    currentQuizKey = Object.keys(quizzes[quiz])[0]; // Get the key of the first item in the quiz
+    document.getElementById('quiz-selection').style.display = 'none';
+    document.getElementById('question-display').style.display = 'block';
+    displayQuestion();
+  }
+  
+  function displayQuestion() {
+    const question = quizzes[currentQuiz][currentQuizKey]['questions'][currentQuestionIndex];
+    const card = document.getElementById('question-card');
+    card.innerHTML = `
+      <div class="card-body text-justify">
+        <h5 class="card-title">${question.question}</h5>
+        ${question.options.map(option => `
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" name="answer" value="${option}">
+            <label class="form-check-label" for="${option}">${option}</label>
+          </div>
+        `).join('')}
+      <button type="button" onclick="submitAnswer()" class="btn btn-primary">Submit Answer</button>
+      <p><span class="score-text">Current Score: ${score}</span></p>
+    </div>
+    `;
+  }
+  
+  function submitAnswer() {
+    const question = quizzes[currentQuiz][currentQuizKey]['questions'][currentQuestionIndex];
+    const answer = document.querySelector('input[name="answer"]:checked').value;
+    if (answer === question.answer) {
+      score++;
+    }
+    currentQuestionIndex++;
+    if (currentQuestionIndex < quizzes[currentQuiz][currentQuizKey]['questions'].length) {
+      displayQuestion(); // Update the question and score display
+    } else {
+      document.getElementById('question-display').style.display = 'none';
+      document.getElementById('score-display').style.display = 'block';
+      document.getElementById('score').textContent = score;
+    }
+  }
+  
+  </script>
+
+
+ 
   <!-- Scripts -->
   <script src="{{url_for('static', filename='assets/vendor/jquery/jquery.min.js')}}"></script>
   <script src="{{url_for('static', filename='assets/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -120,6 +203,9 @@
   <script src="{{url_for('static', filename='assets/js/animation.js')}}"></script>
   <script src="{{url_for('static', filename='assets/js/imagesloaded.js')}}"></script>
   <script src="{{url_for('static', filename='assets/js/custom.js')}}"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+  <script src="{{url_for('static', filename='assets/js/intialize_firebase.js')}}"> </script> 
 
 </body>
 </html>
